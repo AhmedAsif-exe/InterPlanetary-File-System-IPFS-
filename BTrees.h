@@ -113,7 +113,21 @@ public:
 
 	}
 
+	void search(int key, BNode* node = nullptr) {
+		node = node == nullptr ? root : node;
+		if (!node) return;
+		int idx = 0;
+		while (idx < node->key.size && key > node->key[idx])
+			++idx;
 
+		if (idx < node->key.size && key == node->key[idx]) {
+			std::cout << "found " << node->key[idx];
+			return;
+		}
+		else if (node->leaf) return;
+		else
+			search(key, node->children[idx]);
+	}
 	void display() {
 		displayTree(root);
 	}
