@@ -127,15 +127,15 @@ public:
     }
 };
 
-//int main() {
-//    std::string number = "1a6c5bf62d42cb2853a3698bb42098c1d296f2a4";
-//    Bigint_160 b1(number);
-//    b1.PrintBigint_160();
-//    int sizeofBits;
-//    std::stringstream stream;
-//    std::cout << "PLease enter size of identifier space\n";
-//    std::cin >> sizeofBits;
-//    Bigint_160 b3 =  b1 % sizeofBits;
-//    b3.PrintBigint_160();
-//    std::cout << b3.to_string();
-//}
+int main() {
+    std::string number = "1a6c5bf62d42cb2853a3698bb42098c1d296f2a4";
+    Bigint_160 b1(number);
+    b1.PrintBigint_160();
+    int sizeofBits;
+    std::stringstream stream;
+    std::cout << "PLease enter size of identifier space\n";
+    std::cin >> sizeofBits;
+    Bigint_160 b3 =  b1 % sizeofBits;
+    b3.PrintBigint_160();
+    std::cout << b3.to_string();
+}
