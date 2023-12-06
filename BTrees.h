@@ -1,9 +1,10 @@
 #include "Vector.h"
+int entry;
 struct BNode {
-	bool leaf;
-	const int order;
 	Vector<int> key;
 	Vector<BNode*> children;
+	bool leaf;
+	const int order;
 	BNode(int order, bool l = false) : key(order + 1), children(order + 1), order(order) {
 		leaf = l;
 	}
@@ -39,15 +40,13 @@ class BTree {
 
 		fullChild->key.pop(fullChildSize - order + 1);
 
-		//0 1 2 3 4
-	//   0 1 2 	
 		fullChildSize = fullChild->children.size;
 		if (!fullChild->leaf) {
 			for (int idx = order; idx < fullChildSize; ++idx)
 				newChild->children.push_back(fullChild->children[idx]);
 
 
-			fullChild->key.pop(fullChildSize - order + 1);
+			fullChild->key.pop(fullChildSize - order);
 		}
 
 	}
@@ -69,7 +68,7 @@ class BTree {
 		++insertionIdx;
 
 
-		if (node->children[insertionIdx]->key.size == 2 * order - 1) {
+		if (node->children[insertionIdx]->key.size > 2 * order - 1) {
 			splitChild(node, insertionIdx);
 			if (value > node->key[insertionIdx]) ++insertionIdx;
 		}
@@ -103,7 +102,7 @@ class BTree {
 			childNode->key.push_back(node->key[idx]);
 
 			for (int i = 0; i < rightNode->key.size; ++i) {
-				childNode->key.push_back(node->key[i]);
+				childNode->key.push_back(rightNode->key[i]);
 				if (rightNode->children.size > 0)
 					childNode->children.push_back(rightNode->children[i]);
 			}
@@ -118,7 +117,7 @@ class BTree {
 		}
 		else {
 			BNode* leftNode = node->children[nextIdx];
-			leftNode->key.push_back(node->key[nextIdx]);
+			leftNode->key.push_back(leftNode->key[nextIdx]);
 			for (int i = 0; i < childNode->key.size; ++i) {
 				leftNode->key.push_back(node->key[idx]);
 				if (leftNode->children.size > 0)
@@ -136,7 +135,6 @@ class BTree {
 		if (node == root && node->key.size == 0)
 			root = newNode;
 		
-
 	}
 	void removeSibling(BNode* node, int idx, int nextIdx) {
 
@@ -187,6 +185,7 @@ class BTree {
 			merge(node, 0, 1);
 
 		removeSuccessor(node->children[0]);
+	
 	}
 	void removeInternalNode(BNode* node, int value, int idx) {
 
@@ -217,7 +216,7 @@ public:
 	}
 
 	void insert(int value) {
-		if (root->key.size != 2 * order - 1) {
+		if (root->key.size < 2 * order - 1) {
 			insertNonFull(root, value);
 			return;
 		}
@@ -246,7 +245,7 @@ public:
 			search(key, node->children[idx]);
 	}
 
-	BNode* remove(int value, BNode* node) {
+	BNode* removeRecur(int value, BNode* node) {
 		int idx = 0;
 		while (idx < node->key.size && value > node->key[idx]) ++idx;
 
@@ -262,7 +261,7 @@ public:
 			return nullptr;
 		}
 		else if (node->children[idx]->key.size >= order)
-			remove(value, node->children[idx]);
+			removeRecur(value, node->children[idx]);
 		else {
 
 			if (idx != 0 && idx + 2 < node->children.size) {
@@ -286,11 +285,15 @@ public:
 					merge(node, idx, idx - 1);
 			}
 
-			
+
 		}
 
+	}
+	void remove(int value) {
+		removeRecur(value, root);
 	}
 	void display() {
 		displayTree(root);
 	}
 };
+
