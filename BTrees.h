@@ -1,7 +1,8 @@
 #include "Vector.h"
+#include "File.h"
 #include <cmath>
 struct BNode {
-	Vector<int> key;
+	Vector<File*> key;
 	Vector<BNode*> children;
 	bool leaf;
 	const int order;
@@ -10,17 +11,23 @@ struct BNode {
 		leaf = l;
 		parent = nullptr;
 	}
-	void displayNode() const {
+	void TraverseList(File* file) {
+		File* curr = file;
+		while (curr) {
+			std::cout << *curr << "->";
+			curr = curr->next;
+		}
+		std::cout << ' ';
+	}
+	void displayNode() {
 		for (int i = 0; i < key.size; ++i) {
-			std::cout << key[i] << " ";
+			TraverseList(key[i]);
+
 		}
 		std::cout << "| ";
 	}
 	int getSize() { return key.size; }
 };
-
-
-
 class BTree {
 	BNode* root;
 	const int order;
@@ -45,7 +52,7 @@ class BTree {
 
 	}
 
-	void merge(BNode*& node, int idx, int nextIdx) {
+	/*void merge(BNode*& node, int idx, int nextIdx) {
 		BNode* childNode = node->children[idx];
 
 		BNode* newNode = nullptr;
@@ -87,8 +94,8 @@ class BTree {
 		if (node == root && node->key.size == 0)
 			root = newNode;
 		
-	}
-	void removeSibling(BNode* node, int idx, int nextIdx) {
+	}*/
+	/*void removeSibling(BNode* node, int idx, int nextIdx) {
 
 		BNode* childNode = node->children[idx];
 		if (idx < nextIdx) {
@@ -109,8 +116,8 @@ class BTree {
 			if (leftNode->children.size > 0)
 				childNode->children.insert(leftNode->children.peek(), 0);
 		}
-	}
-	int removePredecessor(BNode* node) {
+	}*/
+	/*int removePredecessor(BNode* node) {
 		if (node->leaf) {
 			int key = node->key.peek();
 			node->key.pop();
@@ -124,8 +131,8 @@ class BTree {
 
 		removePredecessor(node->children[keySize]);
 
-	}
-	int removeSuccessor(BNode* node) {
+	}*/
+	/*int removeSuccessor(BNode* node) {
 		if (node->leaf) {
 			int key = node->key.peek();
 			node->key.pop();
@@ -138,8 +145,8 @@ class BTree {
 
 		removeSuccessor(node->children[0]);
 	
-	}
-	void removeInternalNode(BNode* node, int value, int idx) {
+	}*/
+	/*void removeInternalNode(BNode* node, int value, int idx) {
 
 		if (node->leaf) {
 			if (node->key[idx] == value)
@@ -161,20 +168,31 @@ class BTree {
 			removeInternalNode(node->children[idx], value, order - 1);
 		}
 		
-	}
+	}*/
 	void splitRoot() {
 		BNode* newRoot = new BNode(order);
 		newRoot->children.push_back(root);
 		splitChild(newRoot, 0);
 		root = newRoot;
 	}
-
-	void insertRecur(BNode*& node, int value, BNode* parent = nullptr, int childIdx = -1) {
+	void insertLinkedList(File*& fileNode, File*& value) {
+		File* curr = fileNode;
+		while (curr->next) curr = curr->next;
+		curr->next = value;
+	}
+	void insertRecur(BNode*& node,  File*& value, BNode* parent = nullptr, int childIdx = -1) {
 
 		if (node == nullptr) return;
+		int repeat = node->key.includes(value);
+		if (repeat != -1) {
+			insertLinkedList(node->key[repeat], value);
+			return;
+		}
 		if (node->leaf) {
+
 			node->parent = parent;
 			node->key.addInOrder(value);
+			
 			if (node->getSize() >= order) {
 				if (parent == nullptr)
 					splitRoot();
@@ -185,7 +203,9 @@ class BTree {
 		}
 		int idx = 0;
 		int keySize = node->getSize();
+		
 		while (idx < keySize && value > node->key[idx]) ++idx;
+		
 		insertRecur(node->children[idx], value, node, idx);
 
 		if (node->getSize() >= order) {
@@ -232,10 +252,11 @@ public:
 		root = new BNode(order, true);
 	}
 
-	void insert(int value) {
+	void insert(std::string Name, int Hash) {
+		File* value = new File({ Name, Hash });
 		insertRecur(root, value);
 	}
-	void search(int key, BNode* node = nullptr) {
+	void search(File*& key, BNode* node = nullptr) {
 		node = node == nullptr ? root : node;
 		if (!node) return;
 		int idx = 0;
@@ -251,7 +272,7 @@ public:
 			search(key, node->children[idx]);
 	}
 
-	BNode* removeRecur(int value, BNode* node) {
+	/*BNode* removeRecur(int value, BNode* node) {
 		int idx = 0;
 		while (idx < node->key.size && value > node->key[idx]) ++idx;
 
@@ -297,7 +318,7 @@ public:
 	}
 	void remove(int value) {
 		removeRecur(value, root);
-	}
+	}*/
 	void display() {
 		displayTree(root);
 	}

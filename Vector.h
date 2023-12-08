@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "File.h"
 template <class T>
 class Vector
 {
@@ -10,7 +11,7 @@ class Vector
 public:
     int size;
     Vector() : arr(nullptr), size(0), capacity(0) {}
-    Vector(int s) : arr(new T[s]{ NULL }), size(0), capacity(s) {}
+    Vector(int s) : arr(new T[s]{NULL}), size(0), capacity(s) {}
     Vector(const Vector& arrayToCopy) : size(arrayToCopy.size), capacity(arrayToCopy.capacity)
     {
         arr = new T[size];
@@ -67,15 +68,15 @@ public:
         return arr[x];
     }
 
-    bool includes(T element)
+    int includes(T element)
     {
         for (int i = 0; i < size; i++)
             if (element == arr[i])
-                return true;
-        return false;
+                return i;
+        return -1;
     }
 
-    void addInOrder(const T& value) {
+    void addInOrder( T& value) {
         int i = size - 1;
         while (i >= 0 && arr[i] > value) {
             arr[i + 1] = arr[i];
@@ -130,3 +131,25 @@ public:
     }
     ~Vector() { delete arr; arr = nullptr; }
 };
+
+template <>
+void Vector<File*>::addInOrder(File*& value){
+    int i = size - 1;
+    while (i >= 0 && arr[i]->Hash > value->Hash) {
+        arr[i + 1] = arr[i];
+        --i;
+    }
+
+
+    arr[i + 1] = value;
+    ++size;
+
+}
+template <>
+int Vector<File*>::includes(File* element)
+{
+    for (int i = 0; i < size; i++)
+        if (element->Hash == arr[i]->Hash)
+            return i;
+    return -1;
+}
