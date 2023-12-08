@@ -2,14 +2,42 @@
 //
 
 #include <iostream>
+#include "BTrees.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+
+	BTree tree(3);
+	tree.insert(1);
+	tree.insert(3);
+	tree.display(); 
+	std::cout << std::endl;
+
+	tree.insert(4);
+	tree.insert(2);
+	tree.insert(0);
+	tree.insert(5);
+	tree.insert(7);
+	tree.insert(6);
+	tree.insert(10);
+	tree.insert(11);
+	tree.insert(12);
+	tree.insert(13);
+	tree.display(); 
+	std::cout << std::endl;
+	tree.insert(14);
+	tree.display();
+	tree.insert(9);
+	tree.insert(8);
+	tree.insert(21);
+	tree.insert(22);
+	tree.insert(23);
+
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+// Debug program: F5 or Debug > Start Debugging menu`
 
 // Tips for Getting Started: 
 //   1. Use the Solution Explorer window to add/manage files

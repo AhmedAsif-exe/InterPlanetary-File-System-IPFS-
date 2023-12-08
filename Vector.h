@@ -50,6 +50,7 @@ public:
     }
     void pop(int x = 1)
     {
+
         size -= x;
         if (size < 0)
             size = 0;
@@ -74,7 +75,16 @@ public:
         return false;
     }
 
+    void addInOrder(const T& value) {
+        int i = size - 1;
+        while (i >= 0 && arr[i] > value) {
+            arr[i + 1] = arr[i];
+            --i;
+        }
 
+        arr[i + 1] = value;
+        ++size;
+    }
     void insert(const T& value, int idx)
     {
         if (idx < 0 || idx > size) {

@@ -1,12 +1,14 @@
 #include "Vector.h"
-int entry;
+#include <cmath>
 struct BNode {
 	Vector<int> key;
 	Vector<BNode*> children;
 	bool leaf;
 	const int order;
-	BNode(int order, bool l = false) : key(order + 1), children(order + 1), order(order) {
+	BNode* parent;
+	BNode(int order, bool l = false) : key(order + 1), children(order + 2), order(order) {
 		leaf = l;
+		parent = nullptr;
 	}
 	void displayNode() const {
 		for (int i = 0; i < key.size; ++i) {
@@ -14,67 +16,17 @@ struct BNode {
 		}
 		std::cout << "| ";
 	}
+	int getSize() { return key.size; }
 };
+
 
 
 class BTree {
 	BNode* root;
 	const int order;
 
-	void splitChild(BNode* node, int idx) {
-
-		BNode* fullChild = node->children[idx];
-
-		BNode* newChild = new BNode(2 * order - 1, fullChild->leaf);
-
-		node->children.insert(newChild, idx + 1);
-
-		node->key.insert(fullChild->key[order - 1], idx);
-
-		int fullChildSize = fullChild->key.size;
-
-		for (int idx = order; idx < fullChildSize; ++idx)
-			newChild->key.push_back(fullChild->key[idx]);
-
-
-
-		fullChild->key.pop(fullChildSize - order + 1);
-
-		fullChildSize = fullChild->children.size;
-		if (!fullChild->leaf) {
-			for (int idx = order; idx < fullChildSize; ++idx)
-				newChild->children.push_back(fullChild->children[idx]);
-
-
-			fullChild->key.pop(fullChildSize - order);
-		}
-
-	}
-
-	void insertNonFull(BNode* node, int value) {
-		int insertionIdx = node->key.size - 1;
-
-		if (node->leaf) {
-			while (insertionIdx >= 0 && value < node->key[insertionIdx])  // type that will be templatized will need to have operator overloading
-				--insertionIdx;
-
-			node->key.insert(value, insertionIdx + 1);
-			return;
-		}
-
-		while (insertionIdx >= 0 && value < node->key[insertionIdx])
-			--insertionIdx;
-
-		++insertionIdx;
-
-
-		if (node->children[insertionIdx]->key.size > 2 * order - 1) {
-			splitChild(node, insertionIdx);
-			if (value > node->key[insertionIdx]) ++insertionIdx;
-		}
-		insertNonFull(node->children[insertionIdx], value);
-
-	}
+	
+	
 	void printKey(int key, int level) {
 		std::cout << "Level " << level << ": " << key << std::endl;
 	}
@@ -210,24 +162,78 @@ class BTree {
 		}
 		
 	}
+	void splitRoot() {
+		BNode* newRoot = new BNode(order);
+		newRoot->children.push_back(root);
+		splitChild(newRoot, 0);
+		root = newRoot;
+	}
+
+	void insertRecur(BNode*& node, int value, BNode* parent = nullptr, int childIdx = -1) {
+
+		if (node == nullptr) return;
+		if (node->leaf) {
+			node->parent = parent;
+			node->key.addInOrder(value);
+			if (node->getSize() >= order) {
+				if (parent == nullptr)
+					splitRoot();
+				else
+					splitChild(parent, childIdx);
+			}
+			return;
+		}
+		int idx = 0;
+		int keySize = node->getSize();
+		while (idx < keySize && value > node->key[idx]) ++idx;
+		insertRecur(node->children[idx], value, node, idx);
+
+		if (node->getSize() >= order) {
+			if (parent == nullptr)
+				splitRoot();
+			else
+				splitChild(parent, childIdx);
+		}
+
+	}
+	void splitChild(BNode*& node, int idx) {
+
+		BNode* fullChild = node->children[idx];
+
+		BNode* newChild = new BNode(order, fullChild->leaf);
+
+		if (node->children[idx] != this->root)
+			node->children.insert(newChild, idx + 1);
+		else node->children.push_back(newChild);
+
+		int medianKey = ceil(order / 2.0);
+		node->key.insert(fullChild->key[medianKey - 1], idx);
+
+
+		for (int idx = medianKey; idx < order; ++idx)
+			newChild->key.push_back(fullChild->key[idx]);
+
+
+
+		fullChild->key.pop(order - medianKey + 1);
+
+		if (!fullChild->leaf) {
+			for (int idx = medianKey; idx < order + 1; ++idx)
+				newChild->children.push_back(fullChild->children[idx]);
+
+
+			fullChild->children.pop(order - medianKey + 1);
+		}
+
+	}
+
 public:
 	BTree(int order) : order(order) {
-		root = new BNode(2 * order - 1, true);
+		root = new BNode(order, true);
 	}
 
 	void insert(int value) {
-		if (root->key.size < 2 * order - 1) {
-			insertNonFull(root, value);
-			return;
-		}
-
-		BNode* newRoot = new BNode(2 * order - 1);
-		newRoot->children.insert(root, 0);
-		root = newRoot;
-		splitChild(root, 0);
-		insertNonFull(root, value);
-
-
+		insertRecur(root, value);
 	}
 	void search(int key, BNode* node = nullptr) {
 		node = node == nullptr ? root : node;
