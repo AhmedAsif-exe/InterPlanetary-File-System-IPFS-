@@ -130,7 +130,12 @@
     <ClCompile Include="InterPlanetary File System (IPFS).cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BigInt.h" />
     <ClInclude Include="BTrees.h" />
+    <ClInclude Include="DHT.h" />
+    <ClInclude Include="Machine.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="sha1.hpp" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
