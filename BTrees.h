@@ -290,10 +290,44 @@ class BTree {
 		}
 
 	}
+	File* traverseListAndSearch(File* file) {
+		File* curr = file;
+		int count = 1;
+		std::cout << "These are the results that we have found in our DataBase: \n";
+		while (curr) {
+			std::cout << "Press " << count << " for " << *curr << '\n';
+			curr = curr->next;
+			++count;
 
+		}
+		curr = file;
+		int input;
+		std::cin >> input;
+		count = 1;
+		while (count < input) {
+			curr = curr->next;
+			++count;
+		}
+		if (count == input) std::cout << "FOUND IT" << std::endl;
+		return curr;
+	}
 public:
 	BTree(int order) : order(order) {
 		root = new BNode(order, true);
+	}
+	File* search(std::string key, BNode* node = nullptr) {
+		node = node == nullptr ? root : node;
+		if (!node) return nullptr;
+		int idx = 0;
+		while (idx < node->key.size && key > node->key[idx]->Hash)
+			++idx;
+
+		if (idx < node->key.size && key == node->key[idx]->Hash) {
+			
+			return traverseListAndSearch(node->key[idx]);
+		}
+		else
+			search(key, node->children[idx]);
 	}
 
 	void insert(std::string Name, std::string Hash) {

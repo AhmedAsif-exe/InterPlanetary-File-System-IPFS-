@@ -17,13 +17,16 @@ int main()
 	tree.insert("ahmed", "14");
 	tree.insert("ahmed", "13");
 	tree.display();
-	std::cout << std::endl;
-	tree.insert("ahmed", "13");
+	tree.search("13");
+	
+	//std::cout << std::endl;
+	//tree.insert("ahmed", "13");
+	
 //	tree.display();
-	std::cout << std::endl;
-	tree.remove("13");
+	//std::cout << std::endl;
+	//tree.remove("13");
 	//tree.display();
-	std::cout << std::endl;
+	//std::cout << std::endl;
 
 }
 
