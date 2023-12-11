@@ -8,18 +8,22 @@ int main()
 {
 
 	BTree tree(5);
-	tree.insert("ahmed", 1);
-	tree.insert("ahmed", 2);
-	tree.insert("ahmed", 3);
-	tree.insert("ahmed", 12);
-	tree.insert("ahmed", 10);
-	tree.insert("ahmed", 11);
-	tree.insert("ahmed", 14);
-	tree.insert("ahmed", 13);
+	tree.insert("ahmed", "1");
+	tree.insert("ahmed", "2");
+	tree.insert("ahmed", "3");
+	tree.insert("ahmed", "12");
+	tree.insert("ahmed", "10");
+	tree.insert("ahmed", "11");
+	tree.insert("ahmed", "14");
+	tree.insert("ahmed", "13");
 	tree.display();
 	std::cout << std::endl;
-	tree.insert("ahmed", 13);
-	tree.display();
+	tree.insert("ahmed", "13");
+//	tree.display();
+	std::cout << std::endl;
+	tree.remove("13");
+	//tree.display();
+	std::cout << std::endl;
 
 }
 
