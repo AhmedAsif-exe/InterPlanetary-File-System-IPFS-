@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include"DHT.h"
+#include"FileHandling.h"
 using std::cout;
 using std::cin;
 using std::string;
@@ -35,6 +36,24 @@ private:
 
 	void AddFile() {
 
+		cin.ignore(); // Clear the input buffer before using getline
+		string filePath = "";
+		cout << "Please Enter the accurate File Path \n\t\t\t\t\t\t";
+		getline(cin, filePath);
+		string fileContent = getfileContent(filePath);
+
+		SHA1 checksum;
+		checksum.update(fileContent);
+		const std::string hash = checksum.final();
+		cout << "The SHA-1 of file is: " << hash << endl;
+		string extension = "";
+		int i = filePath.length();
+		while (filePath[i] != '.') {
+			extension = filePath[i] + extension;
+			i--;
+		}
+		extension = "." + extension;
+		dh.storeFile(hash, fileContent, extension);
 	}
 
 	void deleteFile() {

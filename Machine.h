@@ -3,24 +3,15 @@
 #define MACHINE_H
 #include<iostream>
 #include"BigInt.h"
+#include"FileHandling.h"
+#include"BTrees.h"
 #include<cmath>
 using  std::string;
 using  std::cout;
 using  std::endl;
 class Machine_Node;
 
-class Files {
-public:
-	int id;
-	string name;
-	string content;
-	Files()
-	{
-		id = 0;
-		name = "NotAssigned.txt";
-		content = "";
-	}
-};
+
 
 class RoutingTable_Node {
 public:
@@ -65,8 +56,6 @@ public:
 	{
 		RoutingTable_Node* newNode = new RoutingTable_Node(count);
 		newNode->index = count;
-		//newNode->nextMachineID = ptr->ID;
-	//	newNode->nextMachineAddress = ptr;
 
 		if (Head == nullptr) {
 			Head = newNode;
@@ -99,25 +88,23 @@ public:
 	}
 };
 
-class Machine_Node {
-public:
+struct Machine_Node {
 	BigInt ID;
 	Machine_Node* next;
 	RoutingTable FT;
-	Files* root;
-
-	Machine_Node() {
-		next = nullptr;
-		root = nullptr;
-	}
-
-	Machine_Node(BigInt id, int sizeofTables) {
+	BTree* btree;
+	BigInt fileCount;
+	Machine_Node(BigInt id, int sizeofTables, int sizeofBtree) {
 		ID = id;
 		next = nullptr;
-		root = nullptr;
 		for (int i = 0; i < sizeofTables; i++) {
 			FT.AddNode();
 		}
+		createDirectory(id.getData());
+		btree = new BTree(sizeofBtree);
+	}
+	~Machine_Node()
+	{
 	}
 };
 
@@ -127,6 +114,7 @@ class Machine_list {
 	BigInt maxid;
 	int no_of_bits_used;
 	int sizeofTables;
+	int sizeofBtree;
 
 	void manageSuccessorsHelper(Machine_Node* temp) {
 		int i = 1;
@@ -154,8 +142,15 @@ class Machine_list {
 				temp2 = temp2->next;
 			}
 
-			tableTemp->nextMachineAddress = temp2;
-			tableTemp->nextMachineID = temp2->ID;
+			if (temp2 != temp) {
+
+				tableTemp->nextMachineAddress = temp2;
+				tableTemp->nextMachineID = temp2->ID;
+			}
+			else {
+				tableTemp->nextMachineAddress = temp2->next;
+				tableTemp->nextMachineID = temp2->next->ID;
+			}
 			tableTemp = tableTemp->next;
 			i++;
 
@@ -163,6 +158,8 @@ class Machine_list {
 		temp = temp->next;
 	}
 	void mangesuccessors() {
+		if (!Head)
+			return;
 		Machine_Node* temp = Head;
 
 		while (temp->next != Head) {
@@ -191,8 +188,12 @@ public:
 		no_of_bits_used = used;
 	}
 
+	void SetsizeofBtree(int size) {
+		sizeofBtree = size;
+	}
+
 	bool AddMachine(BigInt ID) {
-		Machine_Node* newNode = new Machine_Node(ID, sizeofTables);
+		Machine_Node* newNode = new Machine_Node(ID, sizeofTables, sizeofBtree);
 
 		if (!Head) {
 			Head = newNode;
@@ -271,6 +272,10 @@ public:
 		if (status) {
 			mangesuccessors();
 		}
+
+		//Here The folder related to the machine is deleted
+		deleteDirectory(ID.getData());
+
 		return status;
 	}
 
@@ -326,6 +331,33 @@ public:
 			}
 			cout << "We are Relly sorry but no such machine with this Id exist\n";
 		}
+	}
+
+	Machine_Node* mappingIdToMachine(BigInt fileHash, string& pathTaken) {
+		Machine_Node* temp = Head;
+		pathTaken += "machine" + temp->ID.getData() + " ";
+		while (temp->ID < fileHash && temp->next != Head) {
+			RoutingTable_Node* Table_Temp = temp->FT.Head;
+			for (int i = 0; i < sizeofTables - 1; i++) {
+				if (Table_Temp->next->nextMachineID <= fileHash)
+					Table_Temp = Table_Temp->next;
+				else
+					break;
+			}
+			temp = Table_Temp->nextMachineAddress;
+			pathTaken += "machine" + temp->ID.getData() + " ";
+		}
+		return temp;
+	}
+
+	void StoringFile(string fileContent, BigInt fileHash, string extension) {
+		string pathTaken = "";
+		Machine_Node* temp = mappingIdToMachine(fileHash, pathTaken);
+		cout << "File storing Path : " << pathTaken << "\n";
+
+		++(temp->fileCount);
+		std::string newPath = temp->ID.getData() + "\\" + (temp->fileCount.getData()) + extension; // Replace this with your desired file path
+		writeFile(newPath, fileContent);
 	}
 };
 
