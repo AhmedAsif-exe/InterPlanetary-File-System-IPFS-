@@ -14,7 +14,7 @@ private:
 
 	void DeleteMachine() {
 		string id;
-		cout << "Enter machine Id: ";
+		cout << "Enter the machine Id: ";
 		cin >> id;
 		dh.deleteMachine(id);
 	}
