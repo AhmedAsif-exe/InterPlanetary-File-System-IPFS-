@@ -18,7 +18,7 @@ class DHT {
     int sizeofSpace = 0;
     BigInt noofMachines;
     BigInt maximumId;
-
+    int sizeofBtree;
 
     string add(string num1, string num2) {
         if (num1.length() < num2.length()) {
@@ -139,8 +139,8 @@ class DHT {
             return;
         }
 
-        BigInt temp ("1");
-        BigInt temp2 ("2");
+        BigInt temp = "1";
+        BigInt temp2 = "2";
 
         for (int i = 0; i < sizeofSpace; i++) {
             temp = temp * temp2;
@@ -204,8 +204,8 @@ class DHT {
 
     void takeInputByIds() {
 
-        for (BigInt i ("0"); i < noofMachines; ++i) {
-            cout << "Please enter the id of machine "   << " \n";
+        for (BigInt i = "0"; i < noofMachines; ++i) {
+            cout << "Please enter the id of machine " << i + "1" << " \n";
             string id;
             cin >> id;
 
@@ -229,9 +229,9 @@ class DHT {
     }
 
     void takeInputByNames() {
-        for (BigInt i ("0"); i < noofMachines; ++i) {
+        for (BigInt i = "0"; i < noofMachines; ++i) {
 
-            cout << "Please enter the name of machine "  << " \n";
+            cout << "Please enter the name of machine " << i + "1" << " \n";
             string name;
             cin >> name;
 
@@ -384,6 +384,18 @@ public:
         int choice = 0;
         initialMesseage();
 
+        cout << "please enter the size of B-Tree:\n";
+        cin >> sizeofBtree;
+        while (std::cin.fail()) {
+            if (std::cin.fail()) {
+                std::cin.clear(); // Clear error flags
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard input buffer
+            }
+            cout << "Enter a valid size \n";
+            cin >> sizeofBtree;
+        }
+        machines.SetsizeofBtree(sizeofBtree);
+
         cout << "Do you want to give ids  or names  to each machine\n";
         cout << "1.Ids\n";
         cout << "2.Names\n";
@@ -404,6 +416,8 @@ public:
         else {
             takeInputByNames();
         }
+
+
     }
 
     void deleteMachine(string ID) {
@@ -477,5 +491,19 @@ public:
         machines.PrintRoutingTable(temp);
     }
 
+    void storeFile(string id, string content, string extension) {
+        string modedId = Mod(id);
+        BigInt fileId(modedId);
+        cout << "Key of file is: " << modedId << "\n";
+        machines.StoringFile(content, fileId, extension);
+    }
+
+    void deleteAfile(string id) {
+        BigInt id1(id);
+        machines.deletingAFile(id1);
+    }
+    ~DHT() {
+
+    }
 };
 #endif 

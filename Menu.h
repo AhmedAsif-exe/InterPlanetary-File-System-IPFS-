@@ -8,15 +8,27 @@ using std::string;
 class Menu {
 private:
 	DHT dh;
+	bool BigIntVarification(string num) {
+		for (int i = 0; i < num.length(); i++) {
+			if (num[i] < '0' || num[i] > '9')
+				return false;
+		}
+		return true;
+	}
 	void AddMachine() {
 		dh.addMachine();
 	}
 
 	void DeleteMachine() {
 		string id;
-		cout << "Enter the machine Id: ";
+		cout << "Enter machine Id: ";
 		cin >> id;
-		dh.deleteMachine(id);
+		bool status = BigIntVarification(id);
+		if (status == true) {
+			dh.deleteMachine(id);
+		}
+		else
+			cout << "This is not a valid id\n";
 	}
 
 	void printmachineWithTable() {
@@ -40,27 +52,43 @@ private:
 		string filePath = "";
 		cout << "Please Enter the accurate File Path \n\t\t\t\t\t\t";
 		getline(cin, filePath);
-		string fileContent = getfileContent(filePath);
 
-		SHA1 checksum;
-		checksum.update(fileContent);
-		const std::string hash = checksum.final();
-		cout << "The SHA-1 of file is: " << hash << endl;
-		string extension = "";
-		int i = filePath.length();
-		while (filePath[i] != '.') {
-			extension = filePath[i] + extension;
-			i--;
+		bool status = false;
+		string fileContent = getfileContent(filePath, status);
+		if (status == true) {
+			SHA1 checksum;
+			checksum.update(fileContent);
+			const std::string hash = checksum.final();
+			cout << "The SHA-1 of file is: " << hash << endl;
+			string extension = "";
+			int i = filePath.length();
+			while (filePath[i] != '.') {
+				extension = filePath[i] + extension;
+				i--;
+			}
+			extension = "." + extension;
+			dh.storeFile(hash, fileContent, extension);
 		}
-		extension = "." + extension;
-		dh.storeFile(hash, fileContent, extension);
+		else {
+			cout << "proble in file opening\n";
+		}
+
 	}
 
 	void deleteFile() {
-
+		string id;
+		cout << "Enter the key of file to be delted\n";
+		cin >> id;
+		bool status = BigIntVarification(id);
+		if (status == true) {
+			dh.deleteAfile(id);
+		}
+		else
+			cout << "This is not a valid id\n";
 	}
 
 	void openAFile() {
+		string id;
 
 	}
 public:
@@ -79,9 +107,11 @@ public:
 			cout << "\t8.Open a specific file\n";
 			cout << "\t0.Exit the system\n";
 			cin >> choice;
-			while (choice < 0 || choice > 8)
-			{
-				cout << "Enter a valid Choice\n";
+			while (std::cin.fail() || choice < 0 || choice > 8) {
+				std::cin.clear(); // Clear error flags
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard input buffer
+				std::cout << "Invalid input: ";
+				std::cin >> choice;
 			}
 			if (choice == 1) {
 				this->AddMachine();

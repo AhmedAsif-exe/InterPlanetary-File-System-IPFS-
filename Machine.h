@@ -11,8 +11,6 @@ using  std::cout;
 using  std::endl;
 class Machine_Node;
 
-
-
 class RoutingTable_Node {
 public:
 
@@ -86,6 +84,14 @@ public:
 		}
 		cout << endl;
 	}
+	~RoutingTable() {
+		RoutingTable_Node* temp = Head;
+		while (temp != nullptr) {
+			Head = Head->next;
+			delete temp;
+			temp = Head;
+		}
+	}
 };
 
 struct Machine_Node {
@@ -103,13 +109,14 @@ struct Machine_Node {
 		createDirectory(id.getData());
 		btree = new BTree(sizeofBtree);
 	}
-	~Machine_Node()
-	{
+	~Machine_Node() {
+
 	}
 };
 
 class Machine_list {
 	Machine_Node* Head;
+	Machine_Node* last;
 	BigInt count;
 	BigInt maxid;
 	int no_of_bits_used;
@@ -119,7 +126,7 @@ class Machine_list {
 	void manageSuccessorsHelper(Machine_Node* temp) {
 		int i = 1;
 		RoutingTable_Node* tableTemp = temp->FT.Head;
-		Machine_Node* last = Head;
+		last = Head;
 		while (last->next != Head)
 		{
 			last = last->next;
@@ -339,7 +346,7 @@ public:
 		while (temp->ID < fileHash && temp->next != Head) {
 			RoutingTable_Node* Table_Temp = temp->FT.Head;
 			for (int i = 0; i < sizeofTables - 1; i++) {
-				if (Table_Temp->next->nextMachineID <= fileHash)
+				if (Table_Temp->next->nextMachineID <= fileHash && Table_Temp->next->nextMachineID >= Table_Temp->nextMachineID)
 					Table_Temp = Table_Temp->next;
 				else
 					break;
@@ -352,12 +359,37 @@ public:
 
 	void StoringFile(string fileContent, BigInt fileHash, string extension) {
 		string pathTaken = "";
-		Machine_Node* temp = mappingIdToMachine(fileHash, pathTaken);
+		Machine_Node* temp = nullptr;
+		if (fileHash > last->ID) {
+			temp = Head;
+			pathTaken = pathTaken += "machine" + temp->ID.getData() + " ";
+		}
+		else {
+			temp = mappingIdToMachine(fileHash, pathTaken);
+		}
 		cout << "File storing Path : " << pathTaken << "\n";
-
 		++(temp->fileCount);
 		std::string newPath = temp->ID.getData() + "\\" + (temp->fileCount.getData()) + extension; // Replace this with your desired file path
 		writeFile(newPath, fileContent);
+	}
+
+	bool deletingAFile(BigInt id) {
+
+		return false;
+	}
+
+	~Machine_list() {
+		Machine_Node* temp = Head;
+		while (Head->next != Head) {
+			last->next = Head->next;
+			Head = Head->next;
+			deleteDirectory(temp->ID.getData());
+			delete temp;
+			temp = Head;
+		}
+		deleteDirectory(Head->ID.getData());
+		Head = nullptr;
+		last = nullptr;
 	}
 };
 
