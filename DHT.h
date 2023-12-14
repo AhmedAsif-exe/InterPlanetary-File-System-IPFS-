@@ -511,7 +511,8 @@ public:
         //    cout << "No such file exists"*/
     }
     void printingBTree(string id) {
-       
+        BigInt id1(id);
+        machines.PrintBtree(id1);
     }
     ~DHT() {
 
