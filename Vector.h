@@ -54,6 +54,9 @@ public:
         if (size < 0)
             size = 0;
     }
+    T peek() {
+        return arr[size - 1];
+    }
     T& operator[](int x)
     {
         return arr[x];
