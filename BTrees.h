@@ -1,3 +1,4 @@
+#pragma once
 #include "Vector.h"
 #include "File.h"
 #include <queue>
@@ -174,15 +175,20 @@ class BTree {
 		while (!curr->leaf)
 			curr = curr->children[0];
 
-		return curr->key[0]->Hash;
+		return curr->key[0]->Hash.getData();
 	}
-	void removeInternalNode(BNode*& node, std::string value, int idx) {
-		std::string least = getLeastValInSubtree(node->children[idx + 1]);
+	void removeInternalNode(BNode*& node, BigInt& value, int idx, bool& status) {
+		BigInt least = getLeastValInSubtree(node->children[idx + 1]);
 		node->key[idx]->Hash = least;
-		removeRecur(least, node->children[idx + 1]);
+		removeRecur(least, node->children[idx + 1], status);
 	}
 
-	void removeRecur(std::string value, BNode*& node) {
+	void removeRecur(BigInt& value, BNode*& node, bool& status) {
+		if (!node) 
+		{
+			status = false;
+			return;
+		}
 		int idx = 0;
 		while (idx < node->key.size && *node->key[idx] < value) ++idx;
 		if (!node->leaf && idx < node->key.size && *node->key[idx] == value) {
@@ -190,26 +196,28 @@ class BTree {
 			if (node->key[idx]->next)
 			{
 				deleteListNode(node->key[idx]);
+				status = true;
 				return;
 			}
-			removeInternalNode(node, value, idx);
+			removeInternalNode(node, value, idx, status);
 			++idx;
 		}
 		else if (idx < node->key.size && *node->key[idx] == value) {
 			if (node->key[idx]->next)
 			{
 				deleteListNode(node->key[idx]);
+				status = true;
 				return;
 			}
 			node->key.remove(idx);
-
+			status = true;
 			return;
 		}
 		else
-			removeRecur(value, node->children[idx]);
-
-		if (node->children[idx]->getSize() < ceil(order / 2.0) - 1)
-			adjustTree(node, idx);
+			removeRecur(value, node->children[idx], status);
+		if (node->children[idx])
+			if (node->children[idx]->getSize() < ceil(order / 2.0) - 1)
+				adjustTree(node, idx);
 
 	}
 
@@ -311,35 +319,44 @@ class BTree {
 		if (count == input) std::cout << "FOUND IT" << std::endl;
 		path = curr->Path;
 	}
-public:
-	BTree(int order) : order(order) {
-		root = new BNode(order, true);
-	}
-	void search(std::string key, std::string& path, BNode* node = nullptr) {
-		node = node == nullptr ? root : node;
+	void searchRecur(BigInt& key, std::string& path, BNode* node) {
+
 		if (!node) return;
 		int idx = 0;
 		while (idx < node->key.size && key > node->key[idx]->Hash)
 			++idx;
 
 		if (idx < node->key.size && key == node->key[idx]->Hash) {
-
-			traverseListAndSearch(node->key[idx], path);
+			if (node->key[idx]->next)
+				traverseListAndSearch(node->key[idx], path);
+			else
+			{
+				std::cout << "FOUND IT";
+				path = node->key[idx]->Path;
+			}
 			return;
 		}
 		else
-			search(key, path, node->children[idx]);
+			searchRecur(key, path, node->children[idx]);
 	}
-
-	void insert(std::string Name, std::string Hash) {
+public:
+	BTree(int order) : order(order) {
+		root = new BNode(order, true);
+	}
+	void search(BigInt& key, std::string& path) {
+		searchRecur(key, path, root);
+	}
+	void insert(std::string Name, BigInt& Hash) {
 		File* value = new File({ Name, Hash });
 		insertRecur(root, value);
 	}
 
 
 
-	void remove(std::string value) {
-		removeRecur(value, root);
+	bool remove(BigInt& value) {
+		bool status = false;
+		removeRecur(value, root, status);
+		return status;
 	}
 	void display() {
 		if (root == nullptr) return;

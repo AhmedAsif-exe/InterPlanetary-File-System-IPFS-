@@ -370,12 +370,40 @@ public:
 		cout << "File storing Path : " << pathTaken << "\n";
 		++(temp->fileCount);
 		std::string newPath = temp->ID.getData() + "\\" + (temp->fileCount.getData()) + extension; // Replace this with your desired file path
+		temp->btree->insert(newPath, fileHash);
 		writeFile(newPath, fileContent);
 	}
 
-	bool deletingAFile(BigInt id) {
+	void deletingAFile(BigInt id) {
+		std::string pathTaken = "";
+		Machine_Node* temp = nullptr;
+		if (id > last->ID) {
+			temp = Head;
+			pathTaken = pathTaken += "machine" + temp->ID.getData() + " ";
+		}
+		else {
+			temp = mappingIdToMachine(id, pathTaken);
+		}
+		std::cout << "File storing Path : " << pathTaken << "\n";
+		if (temp->btree->remove(id))
+			--(temp->fileCount);
+		
 
-		return false;
+	}
+	void searchFile(BigInt id) {
+		std::string path = "";
+		std::string pathTaken = "";
+		Machine_Node* temp = nullptr;
+		if (id > last->ID) {
+			temp = Head;
+			pathTaken = pathTaken += "machine" + temp->ID.getData() + " ";
+		}
+		else {
+			temp = mappingIdToMachine(id, pathTaken);
+		}
+		std::cout << "File storing Path : " << pathTaken << " \n";
+		temp->btree->search(id, path);
+		std::cout << path << "\n";
 	}
 
 	~Machine_list() {

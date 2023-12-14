@@ -1,11 +1,12 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include "BigInt.h"
 struct File {
-	std::string Hash;
+	BigInt Hash;
 	std::string Path;
 	File* next;
-	File(std::string path, std::string hash) {
+	File(std::string path, BigInt& hash) {
 		Path = path;
 		Hash = hash;
 		next = nullptr;
@@ -14,35 +15,35 @@ struct File {
 	bool operator>(File& file) {
 		return Hash > file.Hash;
 	}
-	bool operator>(std::string hash) {
+	bool operator>(BigInt& hash) {
 		return Hash > hash;
 	}
 	bool operator<(File& file) {
 		return Hash < file.Hash;
-	}bool operator<(std::string hash) {
+	}bool operator<(BigInt& hash) {
 		return Hash < hash;
 	}
 	bool operator == (File& file) {
 		return Hash == file.Hash;
 	}
-	bool operator ==(std::string hash) {
+	bool operator ==(BigInt& hash) {
 		return Hash == hash;
 	}
 	bool operator <= (File& file) {
 		return Hash <= file.Hash;
 	}
-	bool operator <= (std::string hash) {
+	bool operator <= (BigInt& hash) {
 		return Hash <= hash;
 	}
 	bool operator >= (File& file) {
 		return Hash >= file.Hash;
 	}
-	bool operator >= (std::string hash) {
+	bool operator >= (BigInt& hash) {
 		return Hash >= hash;
 	}
-	friend std::ostream& operator<<(std::ostream& os, const File& obj) {
-		os << obj.Hash << " " << obj.Path;
-		return os;
+	friend std::ostream& operator<<(std::ostream& os, File& obj) {
+			os << obj.Hash;
+			return os;
 	}
 
 };
