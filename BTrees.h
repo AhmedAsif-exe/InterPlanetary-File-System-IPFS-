@@ -32,12 +32,12 @@ class BTree {
 	BNode* root;
 	const int order;
 
-	
-	
+
+
 	void printKey(int key, int level) {
 		std::cout << "Level " << level << ": " << key << std::endl;
 	}
-	
+
 
 	void merge(BNode*& node, int idx, int nextIdx) {
 		BNode* childNode = node->children[idx];
@@ -181,12 +181,12 @@ class BTree {
 		node->key[idx]->Hash = least;
 		removeRecur(least, node->children[idx + 1]);
 	}
-	
+
 	void removeRecur(std::string value, BNode*& node) {
 		int idx = 0;
-		while (idx < node->key.size &&   *node->key[idx] < value) ++idx;
+		while (idx < node->key.size && *node->key[idx] < value) ++idx;
 		if (!node->leaf && idx < node->key.size && *node->key[idx] == value) {
-			
+
 			if (node->key[idx]->next)
 			{
 				deleteListNode(node->key[idx]);
@@ -224,7 +224,7 @@ class BTree {
 		while (curr->next) curr = curr->next;
 		curr->next = value;
 	}
-	void insertRecur(BNode*& node,  File*& value, BNode* parent = nullptr, int childIdx = -1) {
+	void insertRecur(BNode*& node, File*& value, BNode* parent = nullptr, int childIdx = -1) {
 
 		if (node == nullptr) return;
 		int repeat = node->key.includes(value);
@@ -236,7 +236,7 @@ class BTree {
 
 			node->parent = parent;
 			node->key.addInOrder(value);
-			
+
 			if (node->getSize() >= order) {
 				if (parent == nullptr)
 					splitRoot();
@@ -247,9 +247,9 @@ class BTree {
 		}
 		int idx = 0;
 		int keySize = node->getSize();
-		
+
 		while (idx < keySize && *value > *node->key[idx]) ++idx;
-		
+
 		insertRecur(node->children[idx], value, node, idx);
 
 		if (node->getSize() >= order) {
@@ -315,7 +315,7 @@ public:
 	BTree(int order) : order(order) {
 		root = new BNode(order, true);
 	}
-	void search(std::string key, std::string& path,BNode* node = nullptr) {
+	void search(std::string key, std::string& path, BNode* node = nullptr) {
 		node = node == nullptr ? root : node;
 		if (!node) return;
 		int idx = 0;
@@ -323,9 +323,9 @@ public:
 			++idx;
 
 		if (idx < node->key.size && key == node->key[idx]->Hash) {
-			
-			 traverseListAndSearch(node->key[idx], path);
-			 return;
+
+			traverseListAndSearch(node->key[idx], path);
+			return;
 		}
 		else
 			search(key, path, node->children[idx]);
@@ -335,47 +335,47 @@ public:
 		File* value = new File({ Name, Hash });
 		insertRecur(root, value);
 	}
-	
 
-	
+
+
 	void remove(std::string value) {
 		removeRecur(value, root);
 	}
-		void display() {
-			if (root == nullptr) return;
+	void display() {
+		if (root == nullptr) return;
 
-			std::queue<BNode*> q;
-			q.push(root);
+		std::queue<BNode*> q;
+		q.push(root);
 
 
-			while (!q.empty()) {
-				int nodeCount = q.size();
-				std::cout << "{";
-				while (nodeCount > 0) {
-					BNode* current = q.front();
-					q.pop();
-					if (!current) {
-						std::cout << "}\t{";
-						nodeCount--;
-						continue;
-					}
-					// Process the current node (e.g., print keys)
-
-					current->displayNode();
-					std::cout << "|";
-					if (!current->leaf) {
-						// Enqueue children if not a leaf node
-						for (int i = 0; i <= current->getSize(); ++i)
-							q.push(current->children[i]);
-					}
-					q.push(nullptr);
-
+		while (!q.empty()) {
+			int nodeCount = q.size();
+			std::cout << "{";
+			while (nodeCount > 0) {
+				BNode* current = q.front();
+				q.pop();
+				if (!current) {
+					std::cout << "}\t{";
 					nodeCount--;
+					continue;
 				}
-				std::cout << "}";
-				std::cout << "\n";
+				// Process the current node (e.g., print keys)
+
+				current->displayNode();
+				std::cout << "|";
+				if (!current->leaf) {
+					// Enqueue children if not a leaf node
+					for (int i = 0; i <= current->getSize(); ++i)
+						q.push(current->children[i]);
+				}
+				q.push(nullptr);
+
+				nodeCount--;
 			}
+			std::cout << "}";
+			std::cout << "\n";
 		}
-	
+	}
+
 };
 
