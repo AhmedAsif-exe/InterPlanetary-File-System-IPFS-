@@ -139,8 +139,8 @@ class DHT {
             return;
         }
 
-        BigInt temp = "1";
-        BigInt temp2 = "2";
+        BigInt temp( "1");
+        BigInt temp2 ("2");
 
         for (int i = 0; i < sizeofSpace; i++) {
             temp = temp * temp2;
@@ -204,8 +204,8 @@ class DHT {
 
     void takeInputByIds() {
 
-        for (BigInt i = "0"; i < noofMachines; ++i) {
-            cout << "Please enter the id of machine " << i + "1" << " \n";
+        for (BigInt i( "0"); i < noofMachines; ++i) {
+            cout << "Please enter the id of machine " << " \n";
             string id;
             cin >> id;
 
@@ -229,9 +229,9 @@ class DHT {
     }
 
     void takeInputByNames() {
-        for (BigInt i = "0"; i < noofMachines; ++i) {
+        for (BigInt i ( "0"); i < noofMachines; ++i) {
 
-            cout << "Please enter the name of machine " << i + "1" << " \n";
+            cout << "Please enter the name of machine " << " \n";
             string name;
             cin >> name;
 

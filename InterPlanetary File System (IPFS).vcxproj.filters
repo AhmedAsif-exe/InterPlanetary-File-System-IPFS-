@@ -41,5 +41,8 @@
     <ClInclude Include="sha1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FileHandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

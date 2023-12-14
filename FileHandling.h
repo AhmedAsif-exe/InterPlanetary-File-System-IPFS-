@@ -14,11 +14,12 @@
 #include <sys/stat.h>  // For Unix-like systems
 #endif
 
-std::string readFilevedio(const std::string& filePath) {
+std::string readFilevedio(const std::string& filePath, bool& status) {
     cv::VideoCapture cap(filePath);
 
     if (!cap.isOpened()) {
         std::cerr << "Error: Could not open or find the MP4 file " << filePath << std::endl;
+        status = false;
         return "";
     }
 
@@ -29,49 +30,55 @@ std::string readFilevedio(const std::string& filePath) {
         // Convert each frame to grayscale and append to the content
         cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
         videoContent << frame;
+        status = true;
     }
 
     return videoContent.str();
 }
 
-std::string readFilewav(const std::string& filePath) {
+std::string readFilewav(const std::string& filePath, bool& status) {
     //  Read a WAV file using OpenCV
     cv::Mat audio = cv::imread(filePath, cv::IMREAD_UNCHANGED);
 
     if (audio.empty()) {
         std::cerr << "Error: Could not open or find the WAV file " << filePath << std::endl;
+        status = false;
         return "";
     }
 
     //  Assuming the audio is in 16-bit signed PCM format
     if (audio.depth() != CV_16S) {
         std::cerr << "Error: Unsupported audio format. Only 16-bit signed PCM is supported." << std::endl;
+        status = false;
         return "";
     }
 
     //  Convert the audio matrix to a string
     std::string audioContent(reinterpret_cast<const char*>(audio.data), audio.total() * audio.channels() * sizeof(short));
-
+    status = true;
     return audioContent;
 }
 
-std::string readFiletxt(const std::string& filePath) {
+std::string readFiletxt(const std::string& filePath, bool& status) {
     std::ifstream file(filePath, std::ios::binary);
     if (!file) {
         std::cerr << "Error: Could not open or find the file " << filePath << std::endl;
+        status = false;;
         return "";
     }
 
     std::ostringstream content;
     content << file.rdbuf();
+    status = true;
     return content.str();
 }
 
-std::string readImagejpg(const std::string& filePath) {
+std::string readImagejpg(const std::string& filePath, bool& status) {
     //   Extract file extension from the file path
     size_t dotPos = filePath.find_last_of('.');
     if (dotPos == std::string::npos) {
         std::cerr << "Error: File path does not contain a valid file extension." << std::endl;
+        status = false;
         return "";
     }
 
@@ -82,6 +89,7 @@ std::string readImagejpg(const std::string& filePath) {
 
     if (image.empty()) {
         std::cerr << "Error: Could not open or find the image " << filePath << std::endl;
+        status = false;;
         return "";
     }
 
@@ -89,13 +97,15 @@ std::string readImagejpg(const std::string& filePath) {
     cv::imencode("." + fileExtension, image, buffer);
 
     std::string imageContent(buffer.begin(), buffer.end());
+    status = true;
     return imageContent;
 }
 
-std::string readFileImage(const std::string& filePath) {
+std::string readFileImage(const std::string& filePath, bool& status) {
     size_t dotPos = filePath.find_last_of('.');
     if (dotPos == std::string::npos) {
         std::cerr << "Error: File path does not contain a valid file extension." << std::endl;
+        status = false;
         return "";
     }
 
@@ -105,6 +115,7 @@ std::string readFileImage(const std::string& filePath) {
 
     if (image.empty()) {
         std::cerr << "Error: Could not open or find the image " << filePath << std::endl;
+        status = false;
         return "";
     }
 
@@ -112,30 +123,32 @@ std::string readFileImage(const std::string& filePath) {
     cv::imencode("." + fileExtension, image, buffer);
 
     std::string imageContent(buffer.begin(), buffer.end());
+    status = true;
     return imageContent;
 }
 
 
-string getfileContent(string path)
+string getfileContent(string path, bool& status)
 {
     string filePath = path;
     string fileExtension = filePath.substr(filePath.length() - 3);
     string fileContent = "";
 
     if (fileExtension == "txt") {
-        fileContent = readFiletxt(filePath);
+        fileContent = readFiletxt(filePath, status);
     }
     else if (fileExtension == "mp4")
     {
-        fileContent = readFilevedio(filePath);
+        fileContent = readFilevedio(filePath, status);
     }
     else
     {
-        fileContent = readFileImage(filePath);
+        fileContent = readFileImage(filePath, status);
     }
 
     if (fileContent.empty()) {
         std::cerr << "Error reading file or unsupported file type." << std::endl;
+        status = false;
     }
     return fileContent;
 }
@@ -212,4 +225,3 @@ bool writeFile(const std::string& filePath, const std::string& content) {
         return false;
     }
 }
-

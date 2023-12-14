@@ -39,7 +39,13 @@ private:
 		string id;
 		cout << "Enter machine Id: ";
 		cin >> id;
-		dh.printRoutingTable(id);
+		bool status = BigIntVarification(id);
+		if (status == true) {
+			dh.printRoutingTable(id);
+		}
+		else {
+			cout << "which is not a valid id\n";
+		}
 	}
 
 	void PrintBTree() {
