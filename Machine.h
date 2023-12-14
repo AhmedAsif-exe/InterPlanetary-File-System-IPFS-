@@ -420,7 +420,7 @@ public:
 			}
 			if (temp->ID == id) {
 				temp->btree->display();
-			}esle{
+			}else{
 					cout << "NO machine with this id\n";
 			}
 		}
