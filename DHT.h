@@ -498,9 +498,20 @@ public:
         machines.StoringFile(content, fileId, extension);
     }
 
+    void openAfile(string id) {
+        BigInt id1(id);
+        machines.searchFile(id);
+    }
     void deleteAfile(string id) {
         BigInt id1(id);
-        machines.deletingAFile(id1);
+        bool status = machines.deletingAFile(id1);
+        ///*if (status == true)
+        //    cout << "File delted successfully\n";
+        //else 
+        //    cout << "No such file exists"*/
+    }
+    void printingBTree(string id) {
+        BigInt id1(id);
     }
     ~DHT() {
 

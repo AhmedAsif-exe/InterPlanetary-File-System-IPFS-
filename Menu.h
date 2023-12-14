@@ -49,7 +49,16 @@ private:
 	}
 
 	void PrintBTree() {
-
+		string id;
+		cout << "Enter machine Id: ";
+		cin >> id;
+		bool status = BigIntVarification(id);
+		if (status == true) {
+			dh.printingBTree(id);
+		}
+		else {
+			cout << "which is not a valid id\n";
+		}
 	}
 
 	void AddFile() {
@@ -95,7 +104,13 @@ private:
 
 	void openAFile() {
 		string id;
-
+		if (BigIntVarification(id) == true) {
+			
+		}
+		else {
+			cout << "invalid format\n";
+		}
+			
 	}
 public:
 	void mainController() {
