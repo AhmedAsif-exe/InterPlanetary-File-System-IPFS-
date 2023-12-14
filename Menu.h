@@ -105,7 +105,7 @@ private:
 	void openAFile() {
 		string id;
 		if (BigIntVarification(id) == true) {
-			
+			dh.openAfile(id);
 		}
 		else {
 			cout << "invalid format\n";

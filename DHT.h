@@ -504,14 +504,14 @@ public:
     }
     void deleteAfile(string id) {
         BigInt id1(id);
-        bool status = machines.deletingAFile(id1);
+         machines.deletingAFile(id1);
         ///*if (status == true)
         //    cout << "File delted successfully\n";
         //else 
         //    cout << "No such file exists"*/
     }
     void printingBTree(string id) {
-        BigInt id1(id);
+       
     }
     ~DHT() {
 

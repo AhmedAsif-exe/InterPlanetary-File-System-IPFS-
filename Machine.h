@@ -406,6 +406,27 @@ public:
 		std::cout << path << "\n";
 	}
 
+	void PrintBtree(BigInt id) {
+		
+		if (Head == nullptr)
+			return;
+		if (Head->ID == id) {
+			Head->btree->display();
+		}
+		else {
+			Machine_Node* temp = Head->next;
+			while (temp->ID != id && temp->next != Head)			{
+				temp = temp->next;
+			}
+			if (temp->ID == id) {
+				temp->btree->display();
+			}esle{
+					cout << "NO machine with this id\n";
+			}
+		}
+
+	}
+
 	~Machine_list() {
 		Machine_Node* temp = Head;
 		while (Head->next != Head) {
