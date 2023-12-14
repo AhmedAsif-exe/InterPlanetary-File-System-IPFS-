@@ -248,7 +248,7 @@ class BTree {
 		int idx = 0;
 		int keySize = node->getSize();
 		
-		while (idx < keySize && value > node->key[idx]) ++idx;
+		while (idx < keySize && *value > *node->key[idx]) ++idx;
 		
 		insertRecur(node->children[idx], value, node, idx);
 
@@ -290,7 +290,7 @@ class BTree {
 		}
 
 	}
-	File* traverseListAndSearch(File* file) {
+	void traverseListAndSearch(File* file, std::string& path) {
 		File* curr = file;
 		int count = 1;
 		std::cout << "These are the results that we have found in our DataBase: \n";
@@ -309,46 +309,33 @@ class BTree {
 			++count;
 		}
 		if (count == input) std::cout << "FOUND IT" << std::endl;
-		return curr;
+		path = curr->Path;
 	}
 public:
 	BTree(int order) : order(order) {
 		root = new BNode(order, true);
 	}
-	File* search(std::string key, BNode* node = nullptr) {
+	void search(std::string key, std::string& path,BNode* node = nullptr) {
 		node = node == nullptr ? root : node;
-		if (!node) return nullptr;
+		if (!node) return;
 		int idx = 0;
 		while (idx < node->key.size && key > node->key[idx]->Hash)
 			++idx;
 
 		if (idx < node->key.size && key == node->key[idx]->Hash) {
 			
-			return traverseListAndSearch(node->key[idx]);
+			 traverseListAndSearch(node->key[idx], path);
+			 return;
 		}
 		else
-			search(key, node->children[idx]);
+			search(key, path, node->children[idx]);
 	}
 
 	void insert(std::string Name, std::string Hash) {
 		File* value = new File({ Name, Hash });
 		insertRecur(root, value);
 	}
-	void search(File*& key, BNode* node = nullptr) {
-		node = node == nullptr ? root : node;
-		if (!node) return;
-		int idx = 0;
-		while (idx < node->key.size && key > node->key[idx])
-			++idx;
-
-		if (idx < node->key.size && key == node->key[idx]) {
-			std::cout << "found " << node->key[idx];
-			return;
-		}
-		else if (node->leaf) return;
-		else
-			search(key, node->children[idx]);
-	}
+	
 
 	
 	void remove(std::string value) {

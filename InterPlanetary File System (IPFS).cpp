@@ -8,16 +8,18 @@ int main()
 {
 
 	BTree tree(5);
-	tree.insert("ahmed", "1");
-	tree.insert("ahmed", "2");
-	tree.insert("ahmed", "3");
-	tree.insert("ahmed", "12");
-	tree.insert("ahmed", "10");
-	tree.insert("ahmed", "11");
-	tree.insert("ahmed", "14");
-	tree.insert("ahmed", "13");
-	tree.display();
-	tree.search("13");
+	std::string arr[] = { "1", "2", "3" , "12", "10", "11", "14", "13", "13"};
+	std::string path = "ahmed";
+	for (int i = 0; i < 9; i++)
+	{
+		std::cout << "Inserting " << arr[i] << "....\n";
+		tree.insert(path + arr[i] + arr[i > 0 ? i - 1 : i + 1], arr[i]);
+		tree.display();
+		std::cout << std::endl;
+	}
+
+	tree.search("13", path);
+	std::cout << path;
 	
 	//std::cout << std::endl;
 	//tree.insert("ahmed", "13");
