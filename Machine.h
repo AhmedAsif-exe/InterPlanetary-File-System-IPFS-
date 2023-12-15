@@ -261,7 +261,13 @@ public:
 						extension = "." + extension;
 						std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
 						newNode->btree->insert(newPath, Id);
-						if (extension == ".txt")
+						bool textEntesion1 = true;
+						string textextenion = ".txt";
+						for (int i = 0; i < 4; i++) {
+							if (extension[i] != textextenion[i])
+								textEntesion1 = false;
+						}
+						if (textEntesion1)
 							writeTextFile(newPath, fileContent);
 						else
 							writeFile(newPath, fileContent);
@@ -293,7 +299,13 @@ public:
 						extension = "." + extension;
 						std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
 						newNode->btree->insert(newPath, Id);
-						if (extension == ".txt")
+						bool textEntesion1 = true;
+						string textextenion = ".txt";
+						for (int i = 0; i < 4; i++) {
+							if (extension[i] != textextenion[i])
+								textEntesion1 = false;
+						}
+						if (textEntesion1)
 							writeTextFile(newPath, fileContent);
 						else
 							writeFile(newPath, fileContent);
@@ -329,7 +341,13 @@ public:
 						extension = "." + extension;
 						std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
 						newNode->btree->insert(newPath, Id);
-						if (extension == ".txt")
+						bool textEntesion1 = true;
+						string textextenion = ".txt";
+						for (int i = 0; i < 4; i++) {
+							if (extension[i] != textextenion[i])
+								textEntesion1 = false;
+						}
+						if (textEntesion1)
 							writeTextFile(newPath, fileContent);
 						else
 							writeFile(newPath, fileContent);
@@ -431,7 +449,13 @@ public:
 					extension = "." + extension;
 					std::string newPath = nextNode->ID.getData() + "\\" + (nextNode->fileCount.getData()) + extension; // Replace this with your desired file path
 					nextNode->btree->insert(newPath, top->Hash);
-					if (extension == ".txt")
+					bool textEntesion1 = true;
+					string textextenion = ".txt";
+					for (int i = 0; i < 4; i++) {
+						if (extension[i] != textextenion[i])
+							textEntesion1 = false;
+					}
+					if (textEntesion1)
 						writeTextFile(newPath, fileContent);
 					else
 						writeFile(newPath, fileContent);
@@ -542,7 +566,13 @@ public:
 		++(temp->fileCount);
 		std::string newPath = temp->ID.getData() + "\\" + (temp->fileCount.getData()) + extension; // Replace this with your desired file path
 		temp->btree->insert(newPath, fileHash);
-		if (extension == ".txt")
+		bool textEntesion1 = true;
+		string textextenion = ".txt";
+		for (int i = 0; i < 4; i++) {
+			if (extension[i] != textextenion[i])
+				textEntesion1 = false;
+		}
+		if (textEntesion1)
 			writeTextFile(newPath, fileContent);
 		else
 			writeFile(newPath, fileContent);
