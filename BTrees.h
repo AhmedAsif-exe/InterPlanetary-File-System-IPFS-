@@ -394,5 +394,8 @@ public:
 		}
 	}
 
+	void clear(std::queue<BNode*>& q) {
+
+	}
 };
 

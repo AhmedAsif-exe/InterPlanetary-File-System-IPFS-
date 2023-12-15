@@ -2,6 +2,7 @@
 #ifndef MACHINE_H
 #define MACHINE_H
 #include<iostream>
+#include <queue>
 #include"BigInt.h"
 #include"FileHandling.h"
 #include"BTrees.h"
@@ -235,6 +236,17 @@ public:
 		}
 		++count;
 		mangesuccessors();
+		BigInt Id = newNode->ID;
+		Machine_Node* nextNode = newNode->next;
+		while (Id < nextNode->ID) {
+			std::string path = "";
+			nextNode->btree->search(Id, path);
+			if (path != "") {
+				newNode->btree->insert(path, Id);
+			}
+			++Id;
+		}
+
 		return true;
 	}
 
@@ -247,6 +259,7 @@ public:
 		Machine_Node* temp = Head;
 		Machine_Node* prev = nullptr;
 		bool status = false;
+		std::queue<BNode*> q;
 		if (Head->ID == ID) {
 			// if head to be deleted and only one node
 			if (Head->next == Head) {
@@ -279,7 +292,7 @@ public:
 		if (status) {
 			mangesuccessors();
 		}
-
+		
 		//Here The folder related to the machine is deleted
 		deleteDirectory(ID.getData());
 
