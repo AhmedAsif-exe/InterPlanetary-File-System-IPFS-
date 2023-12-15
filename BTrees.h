@@ -394,8 +394,11 @@ public:
 		}
 	}
 
-	void clear(std::queue<BNode*>& q) {
-		
+	void clear(std::queue<File*>& q) {
+		while (root != nullptr) {
+			q.push(root->key[0]);
+			remove(root->key[0]->Hash);
+		}
 	}
 };
 
