@@ -13,7 +13,19 @@
 #else
 #include <sys/stat.h>  // For Unix-like systems
 #endif
+bool deleteFile1(const std::string& filePath)
+{
+    int result = std::remove(filePath.c_str());
 
+    if (result == 0) {
+        std::cout << "File deleted successfully." << std::endl;
+        return true;
+    }
+    else {
+        std::cerr << "Failed to delete file!" << std::endl;
+        return false;
+    }
+}
 std::string readFilevedio(const std::string& filePath, bool& status) {
     cv::VideoCapture cap(filePath);
 

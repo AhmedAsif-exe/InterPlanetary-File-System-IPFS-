@@ -262,6 +262,7 @@ public:
 					newNode->btree->insert(newPath, Id);
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
+					deleteFile1(path);
 					/*Tahir delete the file form path -> path*/
 				}
 				else {
@@ -290,6 +291,7 @@ public:
 					newNode->btree->insert(newPath, Id);
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
+					deleteFile1(path);
 				}
 				else {
 					++Id;
@@ -322,6 +324,7 @@ public:
 					newNode->btree->insert(newPath, Id);
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
+					deleteFile1(path);
 				}
 				else {
 					++Id;
@@ -403,8 +406,8 @@ public:
 		if (status) {
 			mangesuccessors();
 			if (nextNode != nullptr) {
-				int i = 0;
-				while (i < q.size()) {
+				int j = 0;
+				while (j < q.size()) {
 					File* top = q.front();
 					++(nextNode->fileCount);
 					bool status = false;
@@ -421,11 +424,11 @@ public:
 					writeFile(newPath, fileContent);
 					q.pop();
 					q.push(top);
-					i++;
+					j++;
 				}
 				/* ---------- Tahir delete all the files which are in queue.like this	*/
 				while (!q.empty()){
-
+					deleteFile1(q.front()->Path);
 					q.pop();
 				}
 
@@ -528,7 +531,7 @@ public:
 		writeFile(newPath, fileContent);
 	}
 
-	[4:12 PM, 12 / 15 / 2023] Ahmed: void deletingAFile(BigInt id) {
+	void deletingAFile(BigInt id) {
 		std::string pathTaken = "";
 		Machine_Node* temp = nullptr;
 		if (id > last->ID) {
@@ -543,6 +546,7 @@ public:
 		temp->btree->search(id, path);
 		if (path != "") {
 			temp->btree->remove(id);
+			deleteFile1(path);
 			cout << "The file is removed successfully form machine " << temp->ID << "\n";
 			--(temp->fileCount);
 		}
@@ -553,34 +557,7 @@ public:
 
 
 	}
-	[4:13 PM, 12 / 15 / 2023] Ahmed: just add this to ur file
-		[4:13 PM, 12 / 15 / 2023] Ahmed : void deletingAFile(BigInt id) {
-		std::string pathTaken = "";
-		Machine_Node* temp = nullptr;
-		if (id > last->ID) {
-			temp = Head;
-			pathTaken = pathTaken += "machine" + temp->ID.getData() + " ";
-		}
-		else {
-			temp = mappingIdToMachine(id, pathTaken);
-		}
-		std::cout << "File Searching Path : " << pathTaken << "\n";
-		std::string path = "";
-		temp->btree->search(id, path);
-		if (path != "") {
-			temp->btree->remove(id);
-			cout << "The file is removed successfully form machine " << temp->ID << "\n";
-			--(temp->fileCount);
-			/*tahir call fieldelete for this filedelete(path)*/
-		}
-		else {
-			cout << "Sorry! NO such file found\n";
-		}
 
-
-
-	}
-	
 	void searchFile(BigInt id) {
 		std::string path = "";
 		std::string pathTaken = "";

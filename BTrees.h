@@ -350,7 +350,7 @@ class BTree {
 			searchRecur(key, path, node->children[idx]);
 	}
 public:
-	BTree(int order) : order(order) {
+	BTree(int order) : order(order < 3 ? 3 : order) {
 		root = new BNode(order, true);
 	}
 	void search(BigInt& key, std::string& path) {

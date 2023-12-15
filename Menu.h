@@ -114,7 +114,7 @@ private:
 		}
 			
 	}
-public:
+public:	
 	void mainController() {
 		int choice = 1;
 		while (choice != 0)
