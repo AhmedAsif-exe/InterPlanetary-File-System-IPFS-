@@ -147,20 +147,45 @@ string getfileContent(string path, bool& status)
         status = false;
         return "";
     }
-    string fileExtension = filePath.substr(filePath.length() - 3);
-    string fileContent = "";
 
-    if (fileExtension == "txt") {
+    string fileExtension = "";
+    int i = filePath.length();
+    while (filePath[i] != '.') {
+        fileExtension = filePath[i] + fileExtension;
+        i--;
+    }
+
+   
+    string fileContent = "";
+    bool textEntesion1 = true;
+    string textextenion = "txt";
+    for (int i = 0; i < 3; i++) {
+        if (fileExtension[i] != textextenion[i])
+            textEntesion1 = false;
+    }
+   
+    
+    if (textEntesion1) {
         fileContent = readFiletxt(filePath, status);
+        return fileContent;
     }
-    else if (fileExtension == "mp4")
-    {
+    bool textEntesion2 = true;
+    if (!textEntesion1) {
+        textextenion = "mp4";
+        for (int i = 0; i < 3; i++) {
+            if (fileExtension[i] != textextenion[i])
+                textEntesion2 = false;
+        }
+    }
+
+    if (textEntesion2) {
         fileContent = readFilevedio(filePath, status);
+        return fileContent;
     }
-    else
-    {
-        fileContent = readFileImage(filePath, status);
-    }
+  
+   
+    fileContent = readFileImage(filePath, status);
+    
 
     if (fileContent.empty()) {
         std::cerr << "Error reading file or unsupported file type." << std::endl;
