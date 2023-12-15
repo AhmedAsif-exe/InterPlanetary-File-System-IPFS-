@@ -477,7 +477,7 @@ public:
 
 	void PrintRoutingTable(BigInt Id) {
 		if (Head->ID == Id) {
-			cout << "Machin Id: " << Head->ID << endl;
+			cout << "Machine Id: " << Head->ID << endl;
 			cout << "Routing Table\n";
 			Head->FT.Diaplay();
 		}
@@ -486,7 +486,7 @@ public:
 			while (temp->next != Head)
 			{
 				if (temp->ID == Id) {
-					cout << "Machin Id: " << Head->ID << endl;
+					cout << "Machine Id: " << temp->ID << endl;
 					cout << "Routing Table\n";
 					Head->FT.Diaplay();
 					return;
@@ -509,6 +509,7 @@ public:
 					break;
 			}
 			temp = Table_Temp->nextMachineAddress;
+			pathTaken += "Table[" + std::to_string(Table_Temp->index) + "]  ";
 			pathTaken += "machine" + temp->ID.getData() + " ";
 		}
 		return temp;
@@ -605,6 +606,12 @@ public:
 		while (Head->next != Head) {
 			last->next = Head->next;
 			Head = Head->next;
+			std::queue<File*> q;
+			temp->btree->clear(q);
+			while (!q.empty()){
+				deleteFile1(q.front()->Path);
+				q.pop();
+			}
 			deleteDirectory(temp->ID.getData());
 			delete temp;
 			temp = Head;

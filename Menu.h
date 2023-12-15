@@ -74,7 +74,6 @@ private:
 			SHA1 checksum;
 			checksum.update(fileContent);
 			const std::string hash = checksum.final();
-			cout << "The SHA-1 of file is: " << hash << endl;
 			string extension = "";
 			int i = filePath.length();
 			while (filePath[i] != '.') {

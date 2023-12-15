@@ -205,7 +205,7 @@ class DHT {
     void takeInputByIds() {
 
         for (BigInt i( "0"); i < noofMachines; ++i) {
-            cout << "Please enter the id of machine " << " \n";
+            cout << "Please enter the id of machine:\t";
             string id;
             cin >> id;
 
@@ -231,7 +231,7 @@ class DHT {
     void takeInputByNames() {
         for (BigInt i ( "0"); i < noofMachines; ++i) {
 
-            cout << "Please enter the name of machine " << " \n";
+            cout << "Please enter the name of machine:\t ";
             string name;
             cin >> name;
 
@@ -391,7 +391,7 @@ public:
                 std::cin.clear(); // Clear error flags
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard input buffer
             }
-            cout << "Enter a valid size \n";
+            cout << "Enter a valid size:\t";
             cin >> sizeofBtree;
         }
         machines.SetsizeofBtree(sizeofBtree);
