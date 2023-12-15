@@ -139,10 +139,16 @@ class BTree {
 		}
 
 	}
-	void deleteListNode(File*& node) {
+	void deleteListNode(File*& node, bool headFirst) {
 		File* curr = node, * prev = nullptr;
 		int count = 1;
-		std::cout << "These are the results that we have found in our DataBase: \n";
+		if (headFirst)
+		{
+			curr = node;
+			node = node->next;
+			return;
+		}
+			std::cout << "These are the results that we have found in our DataBase: \n";
 		while (curr) {
 			std::cout << "Press " << count << " for " << *curr << '\n';
 			curr = curr->next;
@@ -169,21 +175,21 @@ class BTree {
 
 
 	}
-	std::string getLeastValInSubtree(BNode* node) {
+	File* getLeastValInSubtree(BNode* node) {
 
 		BNode* curr = node;
 		while (!curr->leaf)
 			curr = curr->children[0];
 
-		return curr->key[0]->Hash.getData();
+		return curr->key[0];
 	}
-	void removeInternalNode(BNode*& node, BigInt& value, int idx, bool& status) {
-		BigInt least = getLeastValInSubtree(node->children[idx + 1]);
-		node->key[idx]->Hash = least;
-		removeRecur(least, node->children[idx + 1], status);
+	void removeInternalNode(BNode*& node, BigInt& value, int idx, bool& status, bool headFirst) {
+		File* least = getLeastValInSubtree(node->children[idx + 1]);
+		node->key[idx]= least;
+		removeRecur(least->Hash, node->children[idx + 1], status, headFirst, true);
 	}
 
-	void removeRecur(BigInt& value, BNode*& node, bool& status) {
+	void removeRecur(BigInt& value, BNode*& node, bool& status, bool headFirst = false, bool flushList = false) {
 		if (!node) 
 		{
 			status = false;
@@ -195,17 +201,21 @@ class BTree {
 
 			if (node->key[idx]->next)
 			{
-				deleteListNode(node->key[idx]);
+				deleteListNode(node->key[idx], headFirst);
 				status = true;
 				return;
 			}
-			removeInternalNode(node, value, idx, status);
+			removeInternalNode(node, value, idx, status, headFirst);
 			++idx;
 		}
 		else if (idx < node->key.size && *node->key[idx] == value) {
 			if (node->key[idx]->next)
 			{
-				deleteListNode(node->key[idx]);
+				if (flushList) {
+					node->key.remove(idx);
+				}
+				else
+					deleteListNode(node->key[idx], headFirst);
 				status = true;
 				return;
 			}
@@ -214,7 +224,7 @@ class BTree {
 			return;
 		}
 		else
-			removeRecur(value, node->children[idx], status);
+			removeRecur(value, node->children[idx], status, headFirst, flushList);
 		if (node->children[idx])
 			if (node->children[idx]->getSize() < ceil(order / 2.0) - 1)
 				adjustTree(node, idx);
@@ -353,9 +363,9 @@ public:
 
 
 
-	bool remove(BigInt& value) {
+	bool remove(BigInt& value, bool headFirst = false) {
 		bool status = false;
-		removeRecur(value, root, status);
+		removeRecur(value, root, status, headFirst);
 		return status;
 	}
 	void display() {
@@ -395,9 +405,12 @@ public:
 	}
 
 	void clear(std::queue<File*>& q) {
-		while (root != nullptr) {
+		bool status = true;
+		while (root->key.size > 0) {
+			std::cout << "Deleting " << root->key[0]->Hash << "...\n";
 			q.push(root->key[0]);
-			remove(root->key[0]->Hash);
+			status = remove(root->key[0]->Hash, true);
+			display();
 		}
 	}
 };

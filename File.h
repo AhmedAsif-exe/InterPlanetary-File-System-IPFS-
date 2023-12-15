@@ -42,7 +42,7 @@ struct File {
 		return Hash >= hash;
 	}
 	friend std::ostream& operator<<(std::ostream& os, File& obj) {
-			os << obj.Hash;
+			os << obj.Hash << " " << obj.Path;
 			return os;
 	}
 

@@ -20,13 +20,16 @@ int main() {
 		tree.display();
 		std::cout << std::endl;
 	}
-	BigInt t("11");
-	tree.search(t, path);
-	
-	std::cout << (tree.remove(t)) ? "TRUE" : "FALSE";
-	std::cout << path;
-	tree.display();
-
+	BigInt t("1");
+	std::queue<File*> q;
+	tree.clear(q);
+	//tree.search(t, path);
+	std::cout << "Queue Enteries";
+	while (!q.empty()) {
+		std::cout << *q.front() << " ";
+		q.pop();
+	}
+	std::cout << "\n";
 	return 0 ;
 }
 

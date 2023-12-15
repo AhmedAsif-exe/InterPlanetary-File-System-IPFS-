@@ -259,7 +259,6 @@ public:
 		Machine_Node* temp = Head;
 		Machine_Node* prev = nullptr;
 		bool status = false;
-		std::queue<BNode*> q;
 		if (Head->ID == ID) {
 			// if head to be deleted and only one node
 			if (Head->next == Head) {
@@ -285,6 +284,13 @@ public:
 			}
 			if (temp->ID == ID) {
 				prev->next = temp->next;
+				std::queue<File*> q;
+				temp->btree->clear(q);
+				while (!q.empty()) {
+					File* top = q.front();
+					temp->next->btree->insert(top->Path, top->Hash);
+					q.pop();
+				}
 				delete temp;
 				status = true;
 			}
@@ -292,7 +298,6 @@ public:
 		if (status) {
 			mangesuccessors();
 		}
-		
 		//Here The folder related to the machine is deleted
 		deleteDirectory(ID.getData());
 
@@ -433,7 +438,7 @@ public:
 			}
 			if (temp->ID == id) {
 				temp->btree->display();
-			}esle{
+			}else{
 					cout << "NO machine with this id\n";
 			}
 		}
