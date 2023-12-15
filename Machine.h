@@ -528,7 +528,7 @@ public:
 		writeFile(newPath, fileContent);
 	}
 
-	[4:12 PM, 12 / 15 / 2023] Ahmed: void deletingAFile(BigInt id) {
+	void deletingAFile(BigInt id) {
 		std::string pathTaken = "";
 		Machine_Node* temp = nullptr;
 		if (id > last->ID) {
@@ -553,34 +553,6 @@ public:
 
 
 	}
-	[4:13 PM, 12 / 15 / 2023] Ahmed: just add this to ur file
-		[4:13 PM, 12 / 15 / 2023] Ahmed : void deletingAFile(BigInt id) {
-		std::string pathTaken = "";
-		Machine_Node* temp = nullptr;
-		if (id > last->ID) {
-			temp = Head;
-			pathTaken = pathTaken += "machine" + temp->ID.getData() + " ";
-		}
-		else {
-			temp = mappingIdToMachine(id, pathTaken);
-		}
-		std::cout << "File Searching Path : " << pathTaken << "\n";
-		std::string path = "";
-		temp->btree->search(id, path);
-		if (path != "") {
-			temp->btree->remove(id);
-			cout << "The file is removed successfully form machine " << temp->ID << "\n";
-			--(temp->fileCount);
-			/*tahir call fieldelete for this filedelete(path)*/
-		}
-		else {
-			cout << "Sorry! NO such file found\n";
-		}
-
-
-
-	}
-	
 	void searchFile(BigInt id) {
 		std::string path = "";
 		std::string pathTaken = "";
