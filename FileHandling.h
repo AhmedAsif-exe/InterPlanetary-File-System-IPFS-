@@ -241,3 +241,18 @@ bool writeFile(const std::string& filePath, const std::string& content) {
         return false;
     }
 }
+
+bool writeTextFile(const std::string& filePath, const std::string& content) {
+    std::ofstream file(filePath);
+
+    if (file.is_open()) {
+        file << content;
+        file.close();
+        std::cout << "Text file created successfully at path: " << filePath << std::endl;
+        return true;
+    }
+    else {
+        std::cout << "Failed to create text file at path: " << filePath << std::endl;
+        return false;
+    }
+}

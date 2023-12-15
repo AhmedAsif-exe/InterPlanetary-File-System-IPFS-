@@ -218,7 +218,7 @@ class DHT {
             }
 
             BigInt ids(id);
-            bool status = machines.AddMachine(ids);
+            bool status = machines.AddMachine(ids,true);
             if (!status) {
                 cout << "Machine with same key already Exits\n";
                 cout << "Enter id againt\n";
@@ -242,7 +242,7 @@ class DHT {
             hashedId = Mod(hashedId);
             cout << "Calculated id of machine i: " << hashedId << "\n";
             BigInt ids(hashedId);
-            bool status = machines.AddMachine(ids);
+            bool status = machines.AddMachine(ids,true);
 
             if (!status) {
                 cout << "Machine with same key already Exits\n";
@@ -468,7 +468,7 @@ public:
             id = Mod(id);
         }
 
-        bool status = machines.AddMachine(BigInt(id));
+        bool status = machines.AddMachine(BigInt(id), false);
         if (status == true) {
             cout << "The machine is addes successfully\n";
         }
