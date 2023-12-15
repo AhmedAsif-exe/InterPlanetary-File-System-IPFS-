@@ -263,7 +263,9 @@ public:
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
 				}
-				++Id;
+				else {
+					++Id;
+				}
 
 			}
 			BigInt zero("0");
@@ -288,8 +290,9 @@ public:
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
 				}
-				++Id;
-
+				else {
+					++Id;
+				}
 			}
 		}
 		else {
@@ -319,7 +322,9 @@ public:
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
 				}
-				++Id;
+				else {
+					++Id;
+				}
 
 			}
 
@@ -329,7 +334,7 @@ public:
 		return true;
 	}
 
-	bool deleteMachine(BigInt ID) {
+	/*bool deleteMachine(BigInt ID) {
 
 		if (Head == nullptr) {
 			return false;
@@ -389,7 +394,110 @@ public:
 		deleteDirectory(ID.getData());
 
 		return status;
+	}*/
+
+	bool deleteMachine(BigInt ID) {
+
+		if (Head == nullptr) {
+			return false;
+		}
+		std::queue<File*> q;
+		Machine_Node* temp = Head;
+		Machine_Node* prev = nullptr;
+		Machine_Node* nextNode = nullptr;
+		bool status = false;
+		if (Head->ID == ID) {
+			// if head to be deleted and only one node
+			if (Head->next == Head) {
+				int choice;
+				cout << "There is only one machine in The sytem.\n";
+				cout << "If you have removed this then you will lost all the data\n";
+				cout << "Pick a choice\n";
+				cout << "1.Any way delete the machine\n";
+				cout << "2.No Dont' delte machine\n";
+				cin >> choice;
+				while (std::cin.fail() || (choice != 1 && choice != 2)) {
+					if (std::cin.fail()) {
+						std::cin.clear(); // Clear error flags
+						std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard input buffer
+					}
+					cout << "Enter a valid choice\n";
+					cin >> choice;
+				} 
+				if (choice == 1) {
+					Head->btree->clear(q);
+					delete Head;
+					Head = nullptr;
+					status = true;
+				}
+				else {
+					status = false;
+				}
+			}
+			else {
+				prev = Head;
+				while (prev->next != Head) {
+					prev = prev->next;
+				}
+				prev->next = Head->next;
+				Head = Head->next;
+				nextNode = temp->next;
+				temp->btree->clear(q);
+				delete temp;
+				status = true;
+			}
+		}
+		else {
+			while (temp->next != Head && temp->ID != ID) {
+				prev = temp;
+				temp = temp->next;
+			}
+			if (temp->ID == ID) {
+				prev->next = temp->next;
+				nextNode = temp->next;
+				temp->btree->clear(q);
+				delete temp;
+				status = true;
+			}
+		}
+		if (status) {
+			mangesuccessors();
+			if (nextNode != nullptr) {
+				int i = 0;
+				while (i < q.size()) {
+					File* top = q.front();
+					++(nextNode->fileCount);
+					bool status = false;
+					string fileContent = getfileContent(top->Path, status);
+					string extension = "";
+					int i = top->Path.length();
+					while (top->Path[i] != '.') {
+						extension = top->Path[i] + extension;
+						i--;
+					}
+					extension = "." + extension;
+					std::string newPath = nextNode->ID.getData() + "\\" + (nextNode->fileCount.getData()) + extension; // Replace this with your desired file path
+					nextNode->btree->insert(newPath, top->Hash);
+					writeFile(newPath, fileContent);
+					q.pop();
+					q.push(top);
+					i++;
+				}
+				/* ---------- Tahir delete all the files which are in queue.like this	*/
+				while (!q.empty()){
+					q.pop();
+				}
+
+			}
+		//Here The folder related 
+			deleteDirectory(ID.getData());
+		}
+		/*Sotring data to new place*/
+		
+
+		return status;
 	}
+
 
 	void setSizeofTables(int n) {
 		sizeofTables = n;
@@ -496,9 +604,6 @@ public:
 		}else{
 			cout << "Sorry! NO such file found\n";
 		}
-
-		
-
 	}
 	
 	void searchFile(BigInt id) {
