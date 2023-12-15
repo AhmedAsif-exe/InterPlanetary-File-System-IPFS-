@@ -236,33 +236,96 @@ public:
 		}
 		++count;
 		mangesuccessors();
-		BigInt Id = newNode->ID;
-		Machine_Node* nextNode = newNode->next;
-		while (Id < nextNode->ID) {
-			std::string path = "";
-			nextNode->btree->search(Id, path);
-			if (path != "") {
-				++(newNode->fileCount);
-				--(nextNode->fileCount);
-				bool status = false;
-				string fileContent = getfileContent(path, status);
-				string extension = "";
-				int i = path.length();
-				while (path[i] != '.') {
-					extension = path[i] + extension;
-					i--;
+		Machine_Node* prev = nullptr;
+		BigInt Id;
+		if (newNode == Head) {
+			prev = last;
+			Id = last->ID;
+			++Id;
+			Machine_Node* nextNode = newNode->next;
+			while (Id < maxid	) {
+				std::string path = "";
+				nextNode->btree->search(Id, path);
+				if (path != "") {
+					++(newNode->fileCount);
+					--(nextNode->fileCount);
+					bool status = false;
+					string fileContent = getfileContent(path, status);
+					string extension = "";
+					int i = path.length();
+					while (path[i] != '.') {
+						extension = path[i] + extension;
+						i--;
+					}
+					extension = "." + extension;
+					std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
+					newNode->btree->insert(newPath, Id);
+					writeFile(newPath, fileContent);
+					nextNode->btree->remove(Id);
 				}
-				extension = "." + extension;
-				std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
-				newNode->btree->insert(newPath, Id);
-				writeFile(newPath, fileContent);
-				nextNode->btree->remove(Id);
+				++Id;
+
+			}
+			BigInt zero("0");
+			Id = zero;
+			while (Id <= newNode->ID) {
+				std::string path = "";
+				nextNode->btree->search(Id, path);
+				if (path != "") {
+					++(newNode->fileCount);
+					--(nextNode->fileCount);
+					bool status = false;
+					string fileContent = getfileContent(path, status);
+					string extension = "";
+					int i = path.length();
+					while (path[i] != '.') {
+						extension = path[i] + extension;
+						i--;
+					}
+					extension = "." + extension;
+					std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
+					newNode->btree->insert(newPath, Id);
+					writeFile(newPath, fileContent);
+					nextNode->btree->remove(Id);
+				}
+				++Id;
+
+			}
+		}
+		else {
+			prev = last;
+			while (prev->next != newNode){
+				prev = prev->next;
+			}
+			Id = prev->ID;
+			Machine_Node* nextNode = newNode->next;
+			while (Id <= newNode->ID) {
+				std::string path = "";
+				nextNode->btree->search(Id, path);
+				if (path != "") {
+					++(newNode->fileCount);
+					--(nextNode->fileCount);
+					bool status = false;
+					string fileContent = getfileContent(path, status);
+					string extension = "";
+					int i = path.length();
+					while (path[i] != '.') {
+						extension = path[i] + extension;
+						i--;
+					}
+					extension = "." + extension;
+					std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
+					newNode->btree->insert(newPath, Id);
+					writeFile(newPath, fileContent);
+					nextNode->btree->remove(Id);
+				}
+				++Id;
+
 			}
 
-			++Id;
-			
 		}
-
+		
+		
 		return true;
 	}
 
