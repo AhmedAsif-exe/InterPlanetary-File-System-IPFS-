@@ -262,6 +262,7 @@ public:
 					newNode->btree->insert(newPath, Id);
 					writeFile(newPath, fileContent);
 					nextNode->btree->remove(Id);
+					/*Tahir delete the file form path -> path*/
 				}
 				else {
 					++Id;
@@ -334,68 +335,7 @@ public:
 		return true;
 	}
 
-	/*bool deleteMachine(BigInt ID) {
-
-		if (Head == nullptr) {
-			return false;
-		}
-
-		Machine_Node* temp = Head;
-		Machine_Node* prev = nullptr;
-		std::queue<File*> q;
-		bool status = false;
-		if (Head->ID == ID) {
-			// if head to be deleted and only one node
-			if (Head->next == Head) {
-				Head->btree->clear(q);
-				
-				delete Head;
-				Head = nullptr;
-				status = true;
-			}
-			else {
-				prev = Head;
-				while (prev->next != Head) {
-					prev = prev->next;
-				}
-				prev->next = Head->next;
-				Head = Head->next;
-				temp->btree->clear(q);
-				while (!q.empty()) {
-					File* top = q.front();
-					temp->next->btree->insert(top->Path, top->Hash);
-					q.pop();
-				}
-				delete temp;
-				status = true;
-			}
-		}
-		else {
-			while (temp->next != Head && temp->ID != ID) {
-				prev = temp;
-				temp = temp->next;
-			}
-			if (temp->ID == ID) {
-				prev->next = temp->next;
-				temp->btree->clear(q);
-				while (!q.empty()) {
-					File* top = q.front();
-					temp->next->btree->insert(top->Path, top->Hash);
-					q.pop();
-				}
-				delete temp;
-				status = true;
-			}
-		}
-		if (status) {
-			mangesuccessors();
-		}
-		//Here The folder related to the machine is deleted
-		deleteDirectory(ID.getData());
-
-		return status;
-	}*/
-
+	
 	bool deleteMachine(BigInt ID) {
 
 		if (Head == nullptr) {
