@@ -258,10 +258,13 @@ public:
 
 		Machine_Node* temp = Head;
 		Machine_Node* prev = nullptr;
+		std::queue<File*> q;
 		bool status = false;
 		if (Head->ID == ID) {
 			// if head to be deleted and only one node
 			if (Head->next == Head) {
+				Head->btree->clear(q);
+				
 				delete Head;
 				Head = nullptr;
 				status = true;
@@ -273,6 +276,12 @@ public:
 				}
 				prev->next = Head->next;
 				Head = Head->next;
+				temp->btree->clear(q);
+				while (!q.empty()) {
+					File* top = q.front();
+					temp->next->btree->insert(top->Path, top->Hash);
+					q.pop();
+				}
 				delete temp;
 				status = true;
 			}
@@ -284,7 +293,6 @@ public:
 			}
 			if (temp->ID == ID) {
 				prev->next = temp->next;
-				std::queue<File*> q;
 				temp->btree->clear(q);
 				while (!q.empty()) {
 					File* top = q.front();
