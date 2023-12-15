@@ -146,6 +146,7 @@
     <ClInclude Include="BigInt.h" />
     <ClInclude Include="BTrees.h" />
     <ClInclude Include="DHT.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="FileHandling.h" />
     <ClInclude Include="Machine.h" />
     <ClInclude Include="Menu.h" />
