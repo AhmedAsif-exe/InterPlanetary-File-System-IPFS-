@@ -139,7 +139,7 @@ class BTree {
 		}
 
 	}
-	void deleteListNode(File* node) {
+	void deleteListNode(File*& node) {
 		File* curr = node, * prev = nullptr;
 		int count = 1;
 		std::cout << "These are the results that we have found in our DataBase: \n";
@@ -395,7 +395,7 @@ public:
 	}
 
 	void clear(std::queue<BNode*>& q) {
-
+		
 	}
 };
 
