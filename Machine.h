@@ -242,9 +242,25 @@ public:
 			std::string path = "";
 			nextNode->btree->search(Id, path);
 			if (path != "") {
-				newNode->btree->insert(path, Id);
+				++(newNode->fileCount);
+				--(nextNode->fileCount);
+				bool status = false;
+				string fileContent = getfileContent(path, status);
+				string extension = "";
+				int i = path.length();
+				while (path[i] != '.') {
+					extension = path[i] + extension;
+					i--;
+				}
+				extension = "." + extension;
+				std::string newPath = newNode->ID.getData() + "\\" + (newNode->fileCount.getData()) + extension; // Replace this with your desired file path
+				newNode->btree->insert(newPath, Id);
+				writeFile(newPath, fileContent);
+				nextNode->btree->remove(Id);
 			}
+
 			++Id;
+			
 		}
 
 		return true;
