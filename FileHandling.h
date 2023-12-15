@@ -131,6 +131,10 @@ std::string readFileImage(const std::string& filePath, bool& status) {
 string getfileContent(string path, bool& status)
 {
     string filePath = path;
+    if (path.length() < 3) {
+        status = false;
+        return "";
+    }
     string fileExtension = filePath.substr(filePath.length() - 3);
     string fileContent = "";
 
@@ -163,11 +167,11 @@ bool deleteDirectory(const std::string& path) {
 #endif
 
     if (result == 0) {
-        std::cout << "Directory deleted successfully." << std::endl;
+       // std::cout << "Directory deleted successfully." << std::endl;
         return true;
     }
     else {
-        std::cout << "Failed to delete directory!" << std::endl;
+       // std::cout << "Failed to delete directory!" << std::endl;
         return false;
     }
 }
@@ -180,11 +184,11 @@ bool createDirectory(const std::string& path) {
 #endif
 
     if (result == 0) {
-        std::cout << "Directory created successfully." << std::endl;
+       // std::cout << "Directory created successfully." << std::endl;
         return true;
     }
     else {
-        std::cout << "Failed to create directory!" << std::endl;
+       // std::cout << "Failed to create directory!" << std::endl;
         return false;
     }
 }

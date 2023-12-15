@@ -240,13 +240,13 @@ class DHT {
 
             string hashedId = checksum.final();
             hashedId = Mod(hashedId);
-
+            cout << "Calculated id of machine i: " << hashedId << "\n";
             BigInt ids(hashedId);
             bool status = machines.AddMachine(ids);
 
             if (!status) {
                 cout << "Machine with same key already Exits\n";
-                cout << "Enter id againt\n";
+                cout << "Enter id again\n";
                 --i;
                 continue;
             }
@@ -488,6 +488,10 @@ public:
 
     void printRoutingTable(string id) {
         BigInt temp(id);
+        if (temp > this->maximumId) {
+            cout << "File of this id can't exist is this system\n";
+            return;
+        }
         machines.PrintRoutingTable(temp);
     }
 
@@ -500,18 +504,29 @@ public:
 
     void openAfile(string id) {
         BigInt id1(id);
-        machines.searchFile(id);
+        if (id1 > this->maximumId) {
+            cout << "File of this id can't exist is this system\n";
+            return;
+        }
+        machines.searchFile(id1);
     }
+   
     void deleteAfile(string id) {
         BigInt id1(id);
+        if (id1 > this->maximumId) {
+            cout << "File of this id can't exist is this system\n";
+            return;
+        }
          machines.deletingAFile(id1);
-        ///*if (status == true)
-        //    cout << "File delted successfully\n";
-        //else 
-        //    cout << "No such file exists"*/
     }
+    
     void printingBTree(string id) {
-       
+        BigInt id1(id);
+        if (id1 > this->maximumId) {
+            cout << "File of this id can't exist is this system\n";
+            return;
+        }
+        machines.PrintBtree(id1);
     }
     ~DHT() {
 

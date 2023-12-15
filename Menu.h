@@ -65,7 +65,7 @@ private:
 
 		cin.ignore(); // Clear the input buffer before using getline
 		string filePath = "";
-		cout << "Please Enter the accurate File Path \n\t\t\t\t\t\t";
+		cout << "Please Enter the accurate File Path:\t";
 		getline(cin, filePath);
 
 		bool status = false;
@@ -85,7 +85,7 @@ private:
 			dh.storeFile(hash, fileContent, extension);
 		}
 		else {
-			cout << "proble in file opening\n";
+			cout << "problem in file opening\n";
 		}
 
 	}
@@ -104,6 +104,8 @@ private:
 
 	void openAFile() {
 		string id;
+		cout << "Enter the id :\n";
+		cin >> id;
 		if (BigIntVarification(id) == true) {
 			dh.openAfile(id);
 		}
@@ -116,7 +118,7 @@ public:
 	void mainController() {
 		int choice = 1;
 		while (choice != 0)
-		{
+		{			
 			cout << "\n\n\n\t\t\t\t\"Menu\"\n";
 			cout << "\t1.Add new machine\n";
 			cout << "\t2.Add delete machine\n";
@@ -159,8 +161,10 @@ public:
 				this->openAFile();
 			}
 			char ch;
-			cout << "\n\t\tEnter any key to continue\n";
-			cin >> ch;
+			if (choice != 0) {
+				cout << "\n\t\tEnter any key to continue\n";
+				cin >> ch;
+			}
 		}
 
 	}

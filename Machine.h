@@ -402,12 +402,18 @@ public:
 		else {
 			temp = mappingIdToMachine(id, pathTaken);
 		}
-		std::cout << "File storing Path : " << pathTaken << "\n";
-		if (temp->btree->remove(id))
+		std::cout << "File Searching Path : " << pathTaken << "\n";
+		if (temp->btree->remove(id)) {
+			cout << "The file is removed successfully form machine " << temp->ID << "\n";
 			--(temp->fileCount);
+		}else{
+			cout << "Sorry! NO such file found\n";
+		}
+
 		
 
 	}
+	
 	void searchFile(BigInt id) {
 		std::string path = "";
 		std::string pathTaken = "";
@@ -419,9 +425,14 @@ public:
 		else {
 			temp = mappingIdToMachine(id, pathTaken);
 		}
-		std::cout << "File storing Path : " << pathTaken << " \n";
 		temp->btree->search(id, path);
-		std::cout << path << "\n";
+		std::cout << "File searching  Path : " << pathTaken << " \n";
+		if (path != "") {
+			std::cout << "\t" << path << "\n";
+		}
+		else {
+			cout << "No Such file found\n";
+		}
 	}
 
 	void PrintBtree(BigInt id) {
